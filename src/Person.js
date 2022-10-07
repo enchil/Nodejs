@@ -21,5 +21,5 @@ const a = 10;
 const f = n => n * n;
 
 module.exports = {
-Person, a, f
+    Person, a, f
 };

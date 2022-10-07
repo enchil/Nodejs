@@ -1,4 +1,4 @@
-const { Person, a, f } = require('./Person')
+const { Person, a, f } = require('./Person'); //require不限制在哪裡
 
 const p2 = new Person('Flora', 26);
 
