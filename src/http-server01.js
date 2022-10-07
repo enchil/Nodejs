@@ -2,7 +2,7 @@ const http = require('http');
 
 const server = http.createServer((request, response) => {
     response.writeHead(200, {
-        'Content-Type': 'test/plain'
+        'Content-Type': 'text/html'
     })
     response.end('<h2>ABC</h2>');
 });
