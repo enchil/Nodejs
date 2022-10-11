@@ -19,6 +19,12 @@ app.get('/abc', (req, res) => {
     res.send(`<h2>hello index</h2>`);
 });
 
+app.get('/sales-json', (req, res) => {
+    const sales = require(__dirname + '/data/sales');
+    console.log(sales);
+    res.send(`<h2>I'm sales</h2>`);
+});
+
 app.get('/json-test', (req, res) => {
     res.json({ name: 'chichi', age: '18' });
 });
