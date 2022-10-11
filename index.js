@@ -7,6 +7,8 @@ app.set('view engine', 'ejs')//註冊樣版引擎
 
 app.use(express.static('public'));//從根目錄找public把整包引進來
 
+app.use(express.urlencoded({ extended: false }));// top-level middleware
+app.use(express.json());
 
 //設定路由 routes: locolhost:3001
 app.get('/', (req, res) => {
@@ -22,14 +24,29 @@ app.get('/abc', (req, res) => {
 app.get('/sales-json', (req, res) => {
     const sales = require(__dirname + '/data/sales');
     console.log(sales);
-    res.send(`<h2>I'm sales</h2>`);
+    res.render(`sales-json`, { sales });
 });
 
 app.get('/json-test', (req, res) => {
     res.json({ name: 'chichi', age: '18' });
 });
 
-app.use(express.static('node_modules/bootstrap/dist'));//從根目錄找node_modules/bootstrap/dist引進來
+app.get('/try-qs', (req, res) => {
+    res.json(req.query);
+});
+
+app.post('/try-post', (req, res) => {
+    res.json(req.body);
+});
+
+app.get('/try-post-form', (req, res) => {
+    res.render('try-post-form');
+});//render到表單
+app.post('/try-post-form', (req, res) => {
+    res.render('try-post-form', req.body);
+});//拿到資料
+
+app.use(express.static('node_modules/bootstrap/dist'));//從根目錄找node_modules/bootstrap/dist引進來當根目錄
 
 
 app.use((req, res) => { //沒有路徑(錯誤路徑)
