@@ -1,6 +1,14 @@
 require('dotenv').config(); //自動去讀.env
 const express = require('express');
 
+const multer = require('multer');
+
+//const upload = multer({ dest: 'tmp_uploads/' });//設定上傳的地方
+const upload = require(__dirname + '/modules/upload-img');
+
+
+const fs = require('fs').promises;
+
 const app = express();
 
 app.set('view engine', 'ejs')//註冊樣版引擎
@@ -45,6 +53,17 @@ app.get('/try-post-form', (req, res) => {
 app.post('/try-post-form', (req, res) => {
     res.render('try-post-form', req.body);
 });//拿到資料
+
+
+app.post('/try-upload', upload.single('avatar'), async (req, res) => { res.json(req.file);
+    /*if(req.file && req.file.originalname){//判斷有沒有檔名
+    await fs.rename(req.file.path, `public/imgs/${req.file.originalname}`);
+    //搬動路徑
+    res.json(req.file);
+}else{
+    res.json({msg:'沒有上傳檔案'});
+}*/
+});  //只能上傳單一個檔案，檔案欄位是avatar
 
 app.use(express.static('node_modules/bootstrap/dist'));//從根目錄找node_modules/bootstrap/dist引進來當根目錄
 
