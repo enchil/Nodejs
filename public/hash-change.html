@@ -6,28 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .box{
+        .box {
             width: 300px;
-            height: 700px;
-            background-color: lightblue;
+            height: 800px;
+            background-color: rgb(79, 165, 199);
         }
     </style>
 </head>
 <body>
-    <div style="position:fixed;">
+    <div style="position: fixed; top: 0; ">
         <a href="#aaa">aaa</a>
         <a href="#bbb">bbb</a>
         <a href="#ccc">ccc</a>
     </div>
-    
+
     <div class="box" id="aaa"></div>
-    <div class="box" id="bbb" style="background-color: pink;"></div>
-    <div class="box" id="ccc" style="background-color: lemonchiffon;"></div>
+    <div class="box" id="bbb" style="background-color: red ;"></div>
+    <div class="box" id="ccc" style="background-color: green ;"></div>
+
 
     <script>
-        window.addEventListener('hashchange',function(){
-            console.log(location.hash);
+        window.addEventListener('hashchange', function(){
+            console.log(location.hash)
         })
+
     </script>
 </body>
 </html>
