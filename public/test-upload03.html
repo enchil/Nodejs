@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上傳多張圖</title>
+    <style>
+        .photo {
+            width: 400px;
+            height: 300px;
+            position: relative;
+            border: 2px solid coral;
+            display: inline-block;
+        }
+
+        .photo img {
+            position: absolute;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <form name="form1">
+        <input type="file" accept="image/*" name="photos" multiple onchange="upload()">
+    </form>
+    <div id="photo-div">
+        <!-- <div class="photo">
+            <img src="" alt="">
+        </div> -->
+    </div>
+
+    <script>
+        const item = ({ filename }) => 
+        `<div class="photo">
+            <img src="uploads/${filename}" alt="">
+        </div>`;
+        
+
+
+        async function upload() {
+            const fd = new FormData(document.form1);
+
+            const r = await fetch('/try-upload2', {
+                method: 'POST',
+                body: fd
+            });
+
+            const result = await r.json();
+            console.log(result);
+
+            let str = '';
+             if(result && result.length){
+                
+                str = result.map(obj => item(obj)).join('');
+                    
+             }
+
+             document.querySelector('#photo-div').innerHTML = str;
+        }
+    </script>
+</body>
+
+</html>

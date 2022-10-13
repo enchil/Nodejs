@@ -3,8 +3,8 @@ const { v4: uuidv4 } = require('uuid');
 
 const extMap = {
     'image/jpeg': '.jpg',
-    'image/jpeg': '.png',
-    'image/jpeg': '.gif',
+    'image/png': '.png',
+    'image/gif': '.gif',
 };
 
 const fileFilter = (req, file, callback) => {
