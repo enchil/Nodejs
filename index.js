@@ -2,7 +2,9 @@ require('dotenv').config(); //自動去讀.env
 const express = require('express');
 const session = require('express-session');
 const moment = require('moment-timezone');
+const MysqlStore = require('express-mysql-session')(session);
 const db = require(__dirname + '/modules/db_connect2');
+const sessionStore = new MysqlStore({}, db);
 
 
 const multer = require('multer');
@@ -25,14 +27,22 @@ app.use(session({
     saveUninitialized: false, //一開始是否要回存
     resave: false, //是否要強制回存
     secret: 'Apple',//加密的字串
+    store: sessionStore,
     cookie: {
         maxAge: 100_000,//存活時間(重刷網頁一次會從新計算)
-
     }//設定cookie存活時間
 }))
 
 app.use(express.urlencoded({ extended: false }));// 
 app.use(express.json());
+
+app.use((req, res, next) =>{
+    res.locals.toDateString = (d)=>{
+return moment(d).format('YYYY-MM-DD');
+    }
+    res.locals.toDatetimeString = (d)=>moment(d).format('YYYY-MM-DD HH:mm:ss');
+    next();
+});
 
 //設定路由 routes: locolhost:3001
 app.get('/', (req, res) => {
@@ -136,6 +146,31 @@ app.get('/try-db', async (req, res) => {
     const [rows] = await db.query("SELECT * FROM address_book LIMIT 5")
     res.json(rows);
 });
+
+app.get('/try-db-add', async (req, res) => {
+    const name = '小胖';
+    const email = 'kink@gmail.com';
+    const mobile = '0923434343';
+    const birthday = '1999-10-11';
+    const address = 'Taipei';
+    const sql = "INSERT INTO `address_book`(`name`, `email`, `mobile`, `birthday`, `address`, `created_at`) VALUES (?,?,?,?,?,NOW())";
+    const [result] = await db.query(sql, [name, email, mobile, birthday, address])
+    res.json(result);
+});
+
+app.get('/try-db-add2', async (req, res) => {
+    const name = '小胖2';
+    const email = 'kink@gmail.com';
+    const mobile = '0923434343';
+    const birthday = '1999-10-11';
+    const address = 'Taipei';
+    const sql = "INSERT INTO `address_book` SET? ";
+    const [result] = await db.query(sql, [{name, email, mobile, birthday, address, created_at: new Date()}])
+    res.json(result);
+});
+
+app.use('/ab',  require(__dirname + '/routes/address-book') );
+// ------------------------------------------------
 
 //----------------------------------------------------------
 app.use(express.static('public'));//從根目錄找public把整包引進來
