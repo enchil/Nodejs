@@ -6,7 +6,9 @@ router.use((req, res, next) => {
     next();
 });
 
-router.get(['/', '/list'], async (req, res) => {
+
+//router.get(['/', '/list'], async (req, res) 原本的
+async function getListData(req){
     const perPage = 20;
     let page = +req.query.page || 1;
     if (page < 1) {
@@ -39,7 +41,19 @@ router.get(['/', '/list'], async (req, res) => {
         [rows] = await db.query(sql);
     }
 
-    res.render('address-book/list', { totalRows, totalPages, perPage, page, rows });
-})
+    //res.render('address-book/list', 
+    return { totalRows, totalPages, perPage, page, rows, search, query: req.query };
+}
+    
+
+    router.get(['/', '/list'], async (req,res)=>{
+        const data = await getListData(req);
+        res.render('address-book/list', data);
+    });
+
+    router.get(['/api', '/api/list'],async (req,res)=>{
+        res.json(await getListData(req));
+    });
+
 
 module.exports = router;

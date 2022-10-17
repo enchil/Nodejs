@@ -8,7 +8,7 @@
                 <div class="col-lg-4">
                     <form class="d-flex" role="search">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
-                            name="search">
+                            name="search" value="<%= search %>">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>
@@ -18,14 +18,14 @@
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
                             <li class="page-item <%= 1===page? 'disabled' : ''  %>"><a class="page-link"
-                                    href="?page=<%= page-1 %>"><i class="fa-solid fa-circle-left"></i></a></li>
+                                    href="?<%= new URLSearchParams({...query, page: page-1}).toString() %>"><i class="fa-solid fa-circle-left"></i></a></li>
                             <% for(let i=page-5; i<=page+5; i++) if(i>=1 && i<=totalPages) { %>
-                                    <li class="page-item"><a class="page-link" href="?page=<%= i %>">
+                                    <li class="page-item"><a class="page-link" href="?<%= new URLSearchParams({...query, page:i}).toString() %>">
                                             <%= i %>
                                         </a></li>
                                     <% } %>
                                         <li class="page-item <%= totalPages===page? 'disabled' : ''  %>"><a
-                                                class="page-link" href="?page=<%= page+1 %>">
+                                                class="page-link" href="?<%= new URLSearchParams({...query, page:page+1}).toString() %>">
                                                 <i class="fa-solid fa-circle-right"></i></a></li>
                         </ul>
                     </nav>
