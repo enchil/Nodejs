@@ -5,6 +5,8 @@ const moment = require('moment-timezone');
 const MysqlStore = require('express-mysql-session')(session);
 const db = require(__dirname + '/modules/db_connect2');
 const sessionStore = new MysqlStore({}, db);
+const cors = require('cors');
+
 
 
 const multer = require('multer');
@@ -23,6 +25,7 @@ app.set('view engine', 'ejs')//註冊樣版引擎
 
 
 //top level middleware
+app.use(cors());
 app.use(session({
     saveUninitialized: false, //一開始是否要回存
     resave: false, //是否要強制回存
