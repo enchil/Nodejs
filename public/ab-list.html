@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
         integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-        
+
     <title>views</title>
 </head>
 
@@ -58,7 +58,7 @@
             <div class="col-lg-4"></div>
             <div class="col-lg-4"></div>
             <div class="col-lg-4">
-                <form class="d-flex" role="search">
+                <form class="d-flex" role="search" onsubmit="doSearch(event)">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
                         name="search" value="">
                     <button class="btn btn-outline-success" type="submit">Search</button>
@@ -152,7 +152,7 @@
                 if (p < 1 || p > totalPages) return '';
                 return `
                         <li class="page-item ${p === page ? 'active' : ''}"> 
-                            <a class="page-link" href="?page=${p}">
+                            <a class="page-link" href="javascript:gotoPage(${p})">
                                 ${p}
                             </a></li>
                                     `
@@ -200,14 +200,76 @@
                     </table>
                 `;
         }
-        const search = location.search;
+        /*const search = location.search;
         fetch('/ab/api' + search)
             .then(r => r.json())
             .then(result => {
                 console.log(result);
                 t_container.innerHTML = renderTable(result);
                 p_container.innerHTML = renderPagi(result);
-            });
+            });*/
+
+        async function getData() {
+            //getData(params = null)
+            //params:{page:1, search:'abc'}
+
+            let usp = new URLSearchParams(location.search);
+            const r = await fetch('/ab/api?' + usp.toString());
+            const result = await r.json();
+            console.log(result);
+            t_container.innerHTML = renderTable(result);
+            p_container.innerHTML = renderPagi(result);
+        }
+
+
+        const usp = new URLSearchParams(location.search);
+        if (usp.get('search')) document.forms[0].search.value = usp.get('search');
+        getData();
+
+        function doSearch(event) {
+            event.preventDefault();//不讓表單送出
+            const f = event.currentTarget;
+            //console.log({ search: f.search.value });
+
+            const usp = new URLSearchParams({ search: f.search.value });
+
+            history.pushState('', '', '?' + usp.toString());
+            //console.log(location.search);
+
+            /* fetch('/ab/api' + location.search)
+                .then(r => r.json())
+                .then(result => {
+                    console.log(result);
+                    t_container.innerHTML = renderTable(result);
+                    p_container.innerHTML = renderPagi(result);
+                }); */
+            getData();
+        }
+
+        function gotoPage(p) {
+            const usp = new URLSearchParams(location.search);
+            usp.set('page', p);//改寫
+
+            history.pushState('', '', '?' + usp.toString());
+
+            //console.log(location.search);
+
+            /*fetch('/ab/api' + location.search)
+                .then(r => r.json())
+                .then(result => {
+                    console.log(result);
+                    t_container.innerHTML = renderTable(result);
+                    p_container.innerHTML = renderPagi(result);
+                });*/
+
+            getData();
+        }
+
+        window.addEventListener('popstate', function () {
+            getData();
+        });
+
+
     </script>
 
 </body>
