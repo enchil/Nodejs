@@ -90,8 +90,11 @@
 
 
                         // multipart
-                            /*function checkForm(evt) {
+                            function checkForm(evt) {
                                 evt.preventDefault();
+
+                                //TODO:檢查欄位格式
+
                                 const fd = new FormData(document.form1);
                                 fetch('', {
                                     method: 'POST',
@@ -99,6 +102,11 @@
                                 }).then(r => r.json())
                                     .then(result => {
                                         console.log(result);
+                                        if(result.success){
+                                            location.href= './';
+                                        }else{
+                                            alert('無法新增')
+                                        }
                                     })
-                            };*/
+                            };
                         </script>

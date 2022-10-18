@@ -9,7 +9,7 @@ router.use((req, res, next) => {
 
 
 //router.get(['/', '/list'], async (req, res) 原本的
-async function getListData(req, res){
+async function getListData(req, res) {
     const perPage = 20;
     let page = +req.query.page || 1;
     if (page < 1) {
@@ -46,26 +46,47 @@ async function getListData(req, res){
     //res.render('address-book/list', 
     return { totalRows, totalPages, perPage, page, rows, search, query: req.query };
 }
-    //CRUD
+//CRUD
 
 
-    //新增資料
-    router.get('/add', async (req,res)=>{
-        res.render('address-book/add')
-    });
-    router.post('/add', upload.none(), async (req,res)=>{
-        res.json(req.body)
-    });
+//新增資料
+router.get('/add', async (req, res) => {
+    res.locals.title = '新增資料 | ' + res.locals.title;
+    res.render('address-book/add')
+});
+router.post('/add', upload.none(), async (req, res) => {
+    //res.json(req.body)
+    const output = {
+        success: false,
+        code: 0,
+        error: {},
+        postData: req.body, //除錯用
+    };
+    //TODO:檢查欄位的格式 可以用joi
+    const sql = "INSERT INTO `address_book`(`name`, `email`, `mobile`, `birthday`, `address`, `created_at`) VALUES (?,?,?,?,?, NOW())";
+
+    const [result] = await db.query(sql, [
+        req.body.name,
+        req.body.email,
+        req.body.mobile,
+        req.body.birthday || null,
+        req.body.address
+    ]);
+
+    if (result.affectedRows) output.success = true;
+
+    res.json(output);
+});
 
 
-    router.get(['/', '/list'], async (req,res)=>{
-        const data = await getListData(req,res);
-        res.render('address-book/list', data);
-    });
+router.get(['/', '/list'], async (req, res) => {
+    const data = await getListData(req, res);
+    res.render('address-book/list', data);
+});
 
-    router.get(['/api', '/api/list'],async (req,res)=>{
-        res.json(await getListData(req,res));
-    });
+router.get(['/api', '/api/list'], async (req, res) => {
+    res.json(await getListData(req, res));
+});
 
 
 module.exports = router;

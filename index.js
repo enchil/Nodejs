@@ -46,11 +46,13 @@ app.use(session({
 app.use(express.urlencoded({ extended: false }));// 
 app.use(express.json());
 
+// 自己定義的 template helper functions
 app.use((req, res, next) => {
     res.locals.toDateString = (d) => {
         return moment(d).format('YYYY-MM-DD');
     }
     res.locals.toDatetimeString = (d) => moment(d).format('YYYY-MM-DD HH:mm:ss');
+    res.locals.title = 'En的list網站';
     next();
 });
 
