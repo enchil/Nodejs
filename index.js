@@ -53,6 +53,8 @@ app.use((req, res, next) => {
     }
     res.locals.toDatetimeString = (d) => moment(d).format('YYYY-MM-DD HH:mm:ss');
     res.locals.title = 'En的list網站';
+    res.locals.session = req.session;
+
     next();
 });
 
@@ -182,6 +184,20 @@ app.get('/try-db-add2', async (req, res) => {
 });
 
 app.use('/ab', require(__dirname + '/routes/address-book'));
+
+app.get('/fake-login',(req,res)=>{
+    req.session.admin = {
+        id:12,
+        account: 'enchi',
+        nickname: 'enen'
+    };
+    res.redirect('/');
+});
+
+app.get('/logout',(req,res)=>{
+    delete req.session.admin;
+    res.redirect('/');
+});
 // ------------------------------------------------
 
 //----------------------------------------------------------
