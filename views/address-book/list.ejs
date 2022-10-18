@@ -37,17 +37,29 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
+                                <th scope="col">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </th>
                                 <th scope="col">#</th>
                                 <th scope="col">姓名</th>
                                 <th scope="col">手機</th>
                                 <th scope="col">email</th>
                                 <th scope="col">生日</th>
                                 <th scope="col">地址</th>
+                                <th scope="col">
+                                    <i class="fa-solid fa-pen-nib"></i>
+                                </th>
+
                             </tr>
                         </thead>
                         <tbody>
                             <% for(let r of rows){ %>
                                 <tr>
+                                    <td>
+                                        <a href="#">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </a>
+                                    </td>
                                     <td>
                                         <%= r.sid %>
                                     </td>
@@ -65,6 +77,11 @@
                                     </td>
                                     <td>
                                         <%= r.address %>
+                                    </td>
+                                    <td>
+                                        <a href="/ab/edit/<%= r.sid %> ">
+                                            <i class="fa-solid fa-pen-nib"></i>
+                                        </a>
                                     </td>
                                 </tr>
                                 <% }%>
