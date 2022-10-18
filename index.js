@@ -12,6 +12,8 @@ const cors = require('cors');
 const multer = require('multer');
 const { format } = require('path');
 const { runInNewContext } = require('vm');
+const { default: axios } = require('axios');
+
 
 //const upload = multer({ dest: 'tmp_uploads/' });//設定上傳的地方
 const upload = require(__dirname + '/modules/upload-img');
@@ -197,6 +199,11 @@ app.get('/fake-login',(req,res)=>{
 app.get('/logout',(req,res)=>{
     delete req.session.admin;
     res.redirect('/');
+});
+
+app.get('/yahoo',async (req,res)=>{
+   const response = await axios.get('https://tw.yahoo.com/');
+   res.send(response.data);
 });
 // ------------------------------------------------
 
