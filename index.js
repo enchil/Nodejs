@@ -6,19 +6,14 @@ const MysqlStore = require('express-mysql-session')(session);
 const db = require(__dirname + '/modules/db_connect2');
 const sessionStore = new MysqlStore({}, db);
 const cors = require('cors');
-
+const axios = require('axios');
 
 
 const multer = require('multer');
-const { format } = require('path');
-const { runInNewContext } = require('vm');
-const { default: axios } = require('axios');
 
 
 //const upload = multer({ dest: 'tmp_uploads/' });//設定上傳的地方
 const upload = require(__dirname + '/modules/upload-img');
-
-
 const fs = require('fs').promises;
 
 const app = express();
