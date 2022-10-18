@@ -209,11 +209,15 @@
                 p_container.innerHTML = renderPagi(result);
             });*/
 
-        async function getData() {
-            //getData(params = null)
+        async function getDataAndRender() {
+            //getDataAndRender(params = null)
             //params:{page:1, search:'abc'}
-
-            let usp = new URLSearchParams(location.search);
+            const usp = new URLSearchParams(location.search);
+            if (usp.get('search')) {document.forms[0].search.value = usp.get('search');
+            } else {
+                document.forms[0].search.value = '';
+            };
+            //let usp = new URLSearchParams(location.search);
             const r = await fetch('/ab/api?' + usp.toString());
             const result = await r.json();
             console.log(result);
@@ -222,9 +226,10 @@
         }
 
 
-        const usp = new URLSearchParams(location.search);
+        /*const usp = new URLSearchParams(location.search);
         if (usp.get('search')) document.forms[0].search.value = usp.get('search');
-        getData();
+        //搜尋的字在search bar上*/ 
+        getDataAndRender();
 
         function doSearch(event) {
             event.preventDefault();//不讓表單送出
@@ -243,7 +248,7 @@
                     t_container.innerHTML = renderTable(result);
                     p_container.innerHTML = renderPagi(result);
                 }); */
-            getData();
+            getDataAndRender();
         }
 
         function gotoPage(p) {
@@ -262,11 +267,11 @@
                     p_container.innerHTML = renderPagi(result);
                 });*/
 
-            getData();
+            getDataAndRender();
         }
 
         window.addEventListener('popstate', function () {
-            getData();
+            getDataAndRender();
         });
 
 

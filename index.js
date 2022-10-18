@@ -25,7 +25,14 @@ app.set('view engine', 'ejs')//註冊樣版引擎
 
 
 //top level middleware
-app.use(cors());
+const corsOptions = {
+    credentials: true,
+    origin: function (origin, callback) {
+        console.log({ origin });
+        callback(null, true)
+    }
+};
+app.use(cors(corsOptions));
 app.use(session({
     saveUninitialized: false, //一開始是否要回存
     resave: false, //是否要強制回存
@@ -39,11 +46,11 @@ app.use(session({
 app.use(express.urlencoded({ extended: false }));// 
 app.use(express.json());
 
-app.use((req, res, next) =>{
-    res.locals.toDateString = (d)=>{
-return moment(d).format('YYYY-MM-DD');
+app.use((req, res, next) => {
+    res.locals.toDateString = (d) => {
+        return moment(d).format('YYYY-MM-DD');
     }
-    res.locals.toDatetimeString = (d)=>moment(d).format('YYYY-MM-DD HH:mm:ss');
+    res.locals.toDatetimeString = (d) => moment(d).format('YYYY-MM-DD HH:mm:ss');
     next();
 });
 
@@ -168,11 +175,11 @@ app.get('/try-db-add2', async (req, res) => {
     const birthday = '1999-10-11';
     const address = 'Taipei';
     const sql = "INSERT INTO `address_book` SET? ";
-    const [result] = await db.query(sql, [{name, email, mobile, birthday, address, created_at: new Date()}])
+    const [result] = await db.query(sql, [{ name, email, mobile, birthday, address, created_at: new Date() }])
     res.json(result);
 });
 
-app.use('/ab',  require(__dirname + '/routes/address-book') );
+app.use('/ab', require(__dirname + '/routes/address-book'));
 // ------------------------------------------------
 
 //----------------------------------------------------------

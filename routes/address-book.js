@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require(__dirname + '/../modules/db_connect2');
+const upload = require(__dirname + '/../modules/upload-img');
 
 router.use((req, res, next) => {
     next();
@@ -45,7 +46,17 @@ async function getListData(req, res){
     //res.render('address-book/list', 
     return { totalRows, totalPages, perPage, page, rows, search, query: req.query };
 }
-    
+    //CRUD
+
+
+    //新增資料
+    router.get('/add', async (req,res)=>{
+        res.render('address-book/add')
+    });
+    router.post('/add', upload.none(), async (req,res)=>{
+        res.json(req.body)
+    });
+
 
     router.get(['/', '/list'], async (req,res)=>{
         const data = await getListData(req,res);
