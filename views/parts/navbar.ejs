@@ -18,7 +18,7 @@
             </ul>
             
             <ul class="navbar-nav mb-2 mb-lg-0">
-                <%  if (session.admin && session.admin.account) {%> 
+                <%  if (session.admin?.account) {%> 
                 <li class="nav-item">
                     <a class="nav-link"><%= session.admin.nickname  %> </a>
                 </li>
