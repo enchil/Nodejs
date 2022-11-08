@@ -7,7 +7,8 @@ const db = require(__dirname + '/modules/db_connect2');
 const sessionStore = new MysqlStore({}, db);
 const cors = require('cors');
 const axios = require('axios');
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const multer = require('multer');
 
@@ -258,7 +259,8 @@ app.post('/login-api', async (req,res)=>{
         success:false,
         error:'帳密錯誤',
         postData: req.body,//除錯用
-    }
+        auth:{}
+    };
     //req.body
     const sql = "SELECT * FROM admins WHERE account=?";
     const [rows] = await db.query(sql, [req.body.account]);
@@ -273,6 +275,16 @@ app.post('/login-api', async (req,res)=>{
 
     if (output.success) {
         output.error='';
+        const {sid, account, admin_group} = row;
+        const token = jwt.sign(
+            {sid, account, admin_group}
+        , process.env.JWT_SECRET);
+        
+        output.auth = {
+            sid,
+            account,
+            token,
+        }
     }
 
     res.json(output)
