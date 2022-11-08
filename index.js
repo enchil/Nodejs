@@ -7,7 +7,7 @@ const db = require(__dirname + '/modules/db_connect2');
 const sessionStore = new MysqlStore({}, db);
 const cors = require('cors');
 const axios = require('axios');
-
+const bcrypt = require('bcryptjs')
 
 const multer = require('multer');
 
@@ -252,6 +252,32 @@ app.get('/cate2',async (req,res)=>{
     
     res.json(firsts);
 });
+
+app.post('/login-api', async (req,res)=>{
+    const output={
+        success:false,
+        error:'帳密錯誤',
+        postData: req.body,//除錯用
+    }
+    //req.body
+    const sql = "SELECT * FROM admins WHERE account=?";
+    const [rows] = await db.query(sql, [req.body.account]);
+
+    if(! rows.length){
+        return res.json(output);
+    }
+
+    const row =rows[0];
+
+    output.success = await bcrypt.compare(req.body.password, row['password_hash']);
+
+    if (output.success) {
+        output.error='';
+    }
+
+    res.json(output)
+})
+
 // ------------------------------------------------
 
 //----------------------------------------------------------
