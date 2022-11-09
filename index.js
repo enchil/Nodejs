@@ -45,13 +45,25 @@ app.use(express.urlencoded({ extended: false }));//
 app.use(express.json());
 
 // 自己定義的 template helper functions
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
     res.locals.toDateString = (d) => {
         return moment(d).format('YYYY-MM-DD');
     }
     res.locals.toDatetimeString = (d) => moment(d).format('YYYY-MM-DD HH:mm:ss');
     res.locals.title = 'En的list網站';
     res.locals.session = req.session;
+
+    res.locals.auth = {};//預設值
+    let auth = req.get('Authorization');
+    if(auth && auth.indexOf('Bearer ')===0){
+        auth = auth.slice(7); //去掉‘Bearer ’拿到token
+        try {
+            const payload = await jwt.verify(auth, process.env.JWT_SECRET);
+            res.locals.auth = payload;
+        } catch (error) {
+            
+        }
+    }
 
     next();
 });

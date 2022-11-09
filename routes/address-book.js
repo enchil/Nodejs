@@ -140,5 +140,19 @@ router.get(['/api', '/api/list'], async (req, res) => {
     res.json(await getListData(req, res));
 });
 
+router.get(['/api/list-auth'], async (req, res) => {
+    if (res.locals.auth.account) {
+        return res.json(await getListData(req, res));
+    }
+    return res.json({
+        error: '沒有授權',
+        totalRows: 0,
+        totalPages: 0,
+        perPage: 0,
+        page: 1,
+        rows: []
+    })
+    
+});
 
 module.exports = router;
